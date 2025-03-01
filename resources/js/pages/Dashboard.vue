@@ -9,8 +9,8 @@ import Toaster from '@/components/ui/toast/Toaster.vue';
 import { useToast } from '@/components/ui/toast/use-toast';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
-import { Head, useForm, usePage } from '@inertiajs/vue3';
-import { View } from 'lucide-vue-next';
+import { Head, router, useForm, usePage } from '@inertiajs/vue3';
+import { Eye, Trash2 } from 'lucide-vue-next';
 import { ref } from 'vue';
 
 const isAddDialogOpen = ref(false);
@@ -72,6 +72,10 @@ const handleDeleteBoard = () => {
         },
     });
 };
+
+const viewBoard = (boardId: number) => {
+    router.get(route('board.show', { id: boardId }));
+};
 </script>
 
 <template>
@@ -112,8 +116,8 @@ const handleDeleteBoard = () => {
                     <div class="space-y-4 rounded-lg border p-6 shadow-md">
                         <h3 class="text-xl font-bold">{{ board.name }}</h3>
                         <div class="flex justify-end space-x-4">
-                            <Button><View /></Button>
-                            <Button variant="destructive" @click="openDeleteDialog(board.id)">Delete</Button>
+                            <Button @click="viewBoard(board.id)"><Eye /></Button>
+                            <Button variant="destructive" @click="openDeleteDialog(board.id)"><Trash2 /></Button>
                         </div>
                     </div>
                 </div>

@@ -10,9 +10,10 @@ Route::get('/', function () {
 
 
 Route::middleware('auth')->group(function() {
-    Route::post('/dashboard', [BoardController::class, 'store'])->name('board.store');
-    Route::get('/dashboard', [BoardController::class, 'index'])->name('dashboard');
-    Route::delete('/dashboard/{id}', [BoardController::class, 'destroy'])->name('board.delete');
+    Route::post('/board', [BoardController::class, 'store'])->name('board.store');
+    Route::get('/board', [BoardController::class, 'index'])->name('dashboard');
+    Route::delete('/board/{id}', [BoardController::class, 'destroy'])->name('board.delete');
+    Route::get('/board/{id}', [BoardController::class, 'show'])->name('board.show');
 });
 
 require __DIR__.'/settings.php';
