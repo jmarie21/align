@@ -87,5 +87,5 @@ class BoardController extends Controller
         return back()->with([
             'message' => 'Board deleted successfully!'
         ]);
-    }
+    } 
 }
