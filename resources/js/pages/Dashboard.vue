@@ -61,7 +61,7 @@ const handleDeleteBoard = () => {
     form.delete(route('board.delete', { id: selectedBoardId.value }), {
         onSuccess: () => {
             toast({
-                title: 'Board Added',
+                title: 'Board Deleted',
                 description: (page.props.flash as { message: string }).message,
             });
             isDeleteDialogOpen.value = false;

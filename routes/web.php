@@ -15,11 +15,12 @@ Route::middleware('auth')->group(function() {
     Route::post('/board', [BoardController::class, 'store'])->name('board.store');
     Route::get('/board', [BoardController::class, 'index'])->name('dashboard');
     Route::delete('/board/{id}', [BoardController::class, 'destroy'])->name('board.delete');
-    Route::get('/board/{id}', [BoardController::class, 'show'])->name('board.show');
+    Route::get('/board/{boardName}', [BoardController::class, 'show'])->name('board.show');
 
     Route::post('/board/{id}/task-list', [TaskListController::class, 'storeList'])->name('list.storeList');
 
     Route::post('/board/{board}/task-list/{taskList}/task', [TaskController::class, 'store'])->name('task.store');
+    Route::delete('/board/{board}/task-list/{taskList}/task/{task}', [TaskController::class, 'destroy'])->name('task.destroy');
 });
 
 require __DIR__.'/settings.php';

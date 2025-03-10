@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Button from '@/components/ui/button/Button.vue';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import Input from '@/components/ui/input/Input.vue';
 import Label from '@/components/ui/label/Label.vue';
 import Separator from '@/components/ui/separator/Separator.vue';
@@ -8,8 +9,8 @@ import { useToast } from '@/components/ui/toast';
 import Toaster from '@/components/ui/toast/Toaster.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem } from '@/types';
-import { Head, useForm, usePage } from '@inertiajs/vue3';
-import { CirclePlus } from 'lucide-vue-next';
+import { Head, router, useForm, usePage } from '@inertiajs/vue3';
+import { CirclePlus, EllipsisVertical } from 'lucide-vue-next';
 import { ref } from 'vue';
 
 const page = usePage();
@@ -71,6 +72,14 @@ const handleAddTask = () => {
     });
 };
 
+const handleDeleteTask = (taskId: number, listId: number) => {
+    router.delete(route('task.destroy', [props.board.id, listId, taskId]), {
+        onSuccess: () => {
+            console.log('task deleted');
+        },
+    });
+};
+
 const props = defineProps({
     board: {
         type: Object,
@@ -109,7 +118,7 @@ const props = defineProps({
             </div>
 
             <Separator />
-
+            <!-- List of task lists and tasks -->
             <div class="grid auto-rows-min gap-4 md:grid-cols-3">
                 <div v-for="list in board.task_lists">
                     <div class="space-y-4 rounded-lg border p-6 shadow-md">
@@ -119,14 +128,21 @@ const props = defineProps({
                         </div>
 
                         <div v-for="task in list.tasks" class="flex">
-                            <div class="w-full rounded-lg border border-gray-300 p-4">
+                            <div class="flex w-full justify-between rounded-lg border border-gray-300 p-4">
                                 <h1>{{ task.name }}</h1>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger><EllipsisVertical /></DropdownMenuTrigger>
+                                    <DropdownMenuContent>
+                                        <DropdownMenuItem>Edit</DropdownMenuItem>
+                                        <DropdownMenuItem @click="handleDeleteTask(task.id, list.id)">Delete</DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
+            <!-- Add task dialog -->
             <Dialog v-model:open="isAddTaskDialogOpen">
                 <DialogTrigger> </DialogTrigger>
                 <DialogContent>
