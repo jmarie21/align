@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -16,6 +16,8 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Dashboard() {
+    const { tasks } = usePage<{ tasks: any[] }>().props;
+    console.log(tasks);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -55,6 +57,17 @@ export default function Dashboard() {
                     </CustomDialog>
                 </div>
                 <Separator />
+                {tasks.length > 0 ? (
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+                        {tasks.map((task: { id: number; task_name: string }) => (
+                            <div key={task.id} className="rounded-lg border border-gray-200 p-6 shadow-md">
+                                <h1>{task.task_name}</h1>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p className="text-gray-500">No tasks available.</p>
+                )}
             </div>
         </AppLayout>
     );
