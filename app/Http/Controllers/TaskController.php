@@ -29,4 +29,13 @@ class TaskController extends Controller
             'message' => 'Task created successfully.'
         ]);
     }
+
+    public function destroy($id) {
+        $task = Task::findOrFail($id);
+        $task->delete();
+
+        return back()->with([
+            'message' => "Task deleted successfully!"
+        ]);
+    }
 }

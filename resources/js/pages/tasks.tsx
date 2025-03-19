@@ -1,11 +1,13 @@
 import CustomDialog from '@/components/custom-dialog';
 import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, useForm, usePage } from '@inertiajs/react';
+import { Head, router, useForm, usePage } from '@inertiajs/react';
+import { Ellipsis } from 'lucide-react';
 import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -37,6 +39,17 @@ export default function Dashboard() {
         });
     };
 
+    const deleteTask = (id: number) => {
+        router.delete(route('task.destroy', id), {
+            onSuccess: () => {
+                console.log('deleted');
+            },
+            onError: (error) => {
+                console.error('Error when deleting task:', error);
+            },
+        });
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
@@ -60,8 +73,23 @@ export default function Dashboard() {
                 {tasks.length > 0 ? (
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
                         {tasks.map((task: { id: number; task_name: string }) => (
-                            <div key={task.id} className="rounded-lg border border-gray-200 p-6 shadow-md">
-                                <h1>{task.task_name}</h1>
+                            <div key={task.id} className="flex justify-between rounded-lg border border-gray-200 p-6 shadow-md">
+                                <div>
+                                    <h1>{task.task_name}</h1>
+                                </div>
+                                <div className="pl-6">
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger>
+                                            <Ellipsis />
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent>
+                                            <DropdownMenuItem>Edit</DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => deleteTask(task.id)} className="text-red-500 focus:text-red-500">
+                                                Delete
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </div>
                             </div>
                         ))}
                     </div>
