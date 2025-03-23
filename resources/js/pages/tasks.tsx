@@ -1,12 +1,14 @@
 import CustomDialog from '@/components/custom-dialog';
 import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, useForm, usePage } from '@inertiajs/react';
+import { Head, router, useForm, usePage } from '@inertiajs/react';
+import { Ellipsis } from 'lucide-react';
 import { FormEventHandler, useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -21,11 +23,15 @@ type AddTaskForm = {
     description: string;
 };
 
+interface Task {
+    id: number;
+    name: string;
+    description: string;
+}
+
 export default function Dashboard() {
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-    const { tasks } = usePage<{ tasks: any }>().props.tasks;
-
-    console.log(tasks);
+    const { tasks } = usePage<{ tasks: any }>().props;
 
     const { data, setData, post, processing, errors, reset } = useForm<AddTaskForm>({
         name: '',
@@ -46,6 +52,17 @@ export default function Dashboard() {
         });
     };
 
+    const handleDeleteTask = (id: number) => {
+        router.delete(route('tasks.destroy', id), {
+            onSuccess: () => {
+                console.log('task deleted');
+            },
+            onError: (error) => {
+                console.log('Error when deleting task: ', error);
+            },
+        });
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
@@ -60,6 +77,28 @@ export default function Dashboard() {
                 </div>
 
                 <Separator />
+
+                {/* Display tasks */}
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    {tasks.map((task: Task) => (
+                        <div key={task.id} className="flex justify-between rounded-lg border border-gray-200 p-4 shadow-md">
+                            <h1>{task.name}</h1>
+                            <div>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger>
+                                        <Ellipsis />
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent>
+                                        <DropdownMenuItem>Edit</DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => handleDeleteTask(task.id)} className="text-red-500">
+                                            Delete
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
 
             {/* Add Task Dialog */}

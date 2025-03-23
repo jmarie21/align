@@ -10,7 +10,7 @@ class TaskController extends Controller
 {
     public function index() {
         $user = Auth::user();
-        $tasks = $user->tasks()->latest()->get();
+        $tasks = $user->tasks;
         return Inertia::render('tasks', [
             'tasks' => $tasks
         ]);
@@ -27,6 +27,16 @@ class TaskController extends Controller
 
         return back()->with([
             'message' => 'Task created successfully!'
+        ]);
+    }
+
+    public function destroy($id) {
+        $task = Auth::user()->tasks()->findOrFail($id);
+
+        $task->delete();
+
+        return back()->with([
+            'message' => 'Task deleted successfully!'
         ]);
     }
 }
