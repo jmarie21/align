@@ -10,7 +10,7 @@ class TaskController extends Controller
 {
     public function index() {
         $user = Auth::user();
-        $tasks = $user->tasks;
+        $tasks = $user->tasks()->first()->get();
         return Inertia::render('tasks', [
             'tasks' => $tasks
         ]);

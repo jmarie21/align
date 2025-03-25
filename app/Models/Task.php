@@ -9,7 +9,8 @@ class Task extends Model
 {
     protected $fillable = [
         'name',
-        'description'
+        'description',
+        'status'
     ];
 
     public function user(): BelongsTo {

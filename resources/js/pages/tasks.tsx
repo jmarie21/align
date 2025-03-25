@@ -1,5 +1,6 @@
 import CustomDialog from '@/components/custom-dialog';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -108,7 +109,16 @@ export default function Dashboard() {
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     {tasks.map((task: Task) => (
                         <div key={task.id} className="flex justify-between rounded-lg border border-gray-200 p-4 shadow-md">
-                            <h1>{task.name}</h1>
+                            <div className="flex items-center space-x-4">
+                                <Checkbox id="terms" />
+                                <label
+                                    htmlFor="terms"
+                                    className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                >
+                                    {task.name}
+                                </label>
+                            </div>
+
                             <div>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger>
