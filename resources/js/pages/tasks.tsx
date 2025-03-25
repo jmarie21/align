@@ -31,12 +31,23 @@ interface Task {
 
 export default function Dashboard() {
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+    const [selectedTask, setSelectedTask] = useState<Task | null>(null);
     const { tasks } = usePage<{ tasks: any }>().props;
 
-    const { data, setData, post, processing, errors, reset } = useForm<AddTaskForm>({
+    const { data, setData, post, put, processing, errors, reset } = useForm<AddTaskForm>({
         name: '',
         description: '',
     });
+
+    const openEditTaskDialog = (task: Task) => {
+        setIsEditDialogOpen(true);
+        setSelectedTask(task);
+        setData({
+            name: task.name,
+            description: task.description,
+        });
+    };
 
     const handleAddTask: FormEventHandler = (e) => {
         e.preventDefault();
@@ -48,6 +59,21 @@ export default function Dashboard() {
             },
             onError: (error) => {
                 console.log('Error when adding task: ', error);
+            },
+        });
+    };
+
+    const handleEditTask: FormEventHandler = (e) => {
+        e.preventDefault();
+        if (!selectedTask) return;
+        put(route('tasks.update', selectedTask.id), {
+            onSuccess: () => {
+                console.log('task updated');
+                setIsEditDialogOpen(false);
+                reset();
+            },
+            onError: (error) => {
+                console.log('Error when updating task: ', error);
             },
         });
     };
@@ -89,7 +115,7 @@ export default function Dashboard() {
                                         <Ellipsis />
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent>
-                                        <DropdownMenuItem>Edit</DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => openEditTaskDialog(task)}>Edit</DropdownMenuItem>
                                         <DropdownMenuItem onClick={() => handleDeleteTask(task.id)} className="text-red-500">
                                             Delete
                                         </DropdownMenuItem>
@@ -122,6 +148,32 @@ export default function Dashboard() {
                     <div className="mt-4 flex justify-end">
                         <Button type="submit" disabled={processing}>
                             Add
+                        </Button>
+                    </div>
+                </form>
+            </CustomDialog>
+
+            {/* Edit Task Dialog */}
+            <CustomDialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} title="Edit Task">
+                <form onSubmit={handleEditTask}>
+                    <div className="my-2">
+                        <Label>Task Name</Label>
+                        <Input type="text" placeholder="Enter task name" value={data.name} onChange={(e) => setData('name', e.target.value)} />
+                        {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
+                    </div>
+                    <div className="my-2">
+                        <Label>Task Description</Label>
+                        <Textarea
+                            placeholder="Enter description name"
+                            value={data.description}
+                            onChange={(e) => setData('description', e.target.value)}
+                        />
+                        {errors.description && <p className="text-sm text-red-500">{errors.description}</p>}
+                    </div>
+
+                    <div className="mt-4 flex justify-end">
+                        <Button type="submit" disabled={processing}>
+                            Edit
                         </Button>
                     </div>
                 </form>

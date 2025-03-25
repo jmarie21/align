@@ -30,6 +30,21 @@ class TaskController extends Controller
         ]);
     }
 
+    public function update(Request $request, $id) {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:50'],
+            'description' => ['required', 'string', 'max:1000']
+        ]);
+
+        $task = Auth::user()->tasks()->findOrFail($id);
+
+        $task->update($validated);
+
+        return back()->with([
+            'message' => 'Task updated successfully!'
+        ]);
+    }
+
     public function destroy($id) {
         $task = Auth::user()->tasks()->findOrFail($id);
 
