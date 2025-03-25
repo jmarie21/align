@@ -13,12 +13,13 @@ export default function GuestNavbar() {
                 </div>
 
                 <div className="space-x-4">
-                    <Link href={route('login')}>
-                        <Button variant="outline">Login</Button>
-                    </Link>
-                    <Link href={route('register')}>
-                        <Button>Register</Button>
-                    </Link>
+                    <Button variant="outline">
+                        <Link href={route('login')}>Login</Link>
+                    </Button>
+
+                    <Button>
+                        <Link href={route('register')}>Register</Link>
+                    </Button>
                 </div>
             </nav>
         </>

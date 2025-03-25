@@ -13,13 +13,13 @@ export default function HeroSection() {
                     distractions, and turn your to-dos into achievements.
                 </p>
                 {auth.user ? (
-                    <Link href={route('tasks')}>
-                        <Button size="lg">View Tasks</Button>
-                    </Link>
+                    <Button size="lg">
+                        <Link href={route('tasks')}>View Tasks</Link>
+                    </Button>
                 ) : (
-                    <Link href={route('login')}>
-                        <Button size="lg">Get Started</Button>
-                    </Link>
+                    <Button size="lg">
+                        <Link href={route('login')}>Get Started</Link>
+                    </Button>
                 )}
             </div>
         </>

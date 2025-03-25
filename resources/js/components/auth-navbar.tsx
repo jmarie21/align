@@ -11,9 +11,9 @@ export default function AuthNavbar() {
                 </div>
 
                 <div>
-                    <Link href={route('tasks')}>
-                        <Button size="lg">Tasks</Button>
-                    </Link>
+                    <Button size="lg">
+                        <Link href={route('tasks')}>Tasks</Link>
+                    </Button>
                 </div>
             </nav>
         </>
